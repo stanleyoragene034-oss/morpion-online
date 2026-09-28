@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Morpion Online</title>
+<style>
+body{font-family:Arial;text-align:center;background:#111;color:white}
+h1{margin-top:30px}
+#board{display:grid;grid-template-columns:repeat(3,90px);gap:8px;justify-content:center;margin:30px}
+.cell{width:90px;height:90px;font-size:50px;background:#222;color:white;border:2px solid #555}
+button{padding:12px 20px;border:0;border-radius:8px}
+</style>
+</head>
+<body>
+<h1>🎮 Morpion Online</h1>
+<p id="status">Tour de X</p>
+
+<div id="board"></div>
+
+<button onclick="restart()">Recommencer</button>
+
+<script>
+let board=["","","","","","","","",""];
+let player="X";
+let gameOver=false;
+
+function draw(){
+ const b=document.getElementById("board");
+ b.innerHTML="";
+ board.forEach((v,i)=>{
+  let c=document.createElement("button");
+  c.className="cell";
+  c.textContent=v;
+  c.onclick=()=>play(i);
+  b.appendChild(c);
+ });
+}
+
+function play(i){
+ if(board[i]||gameOver)return;
+ board[i]=player;
+ if(win()){
+  document.getElementById("status").textContent=player+" a gagné 🎉";
+  gameOver=true;
+ }else if(!board.includes("")){
+  document.getElementById("status").textContent="Match nul 🤝";
+  gameOver=true;
+ }else{
+  player=player==="X"?"O":"X";
+  document.getElementById("status").textContent="Tour de "+player;
+ }
+ draw();
+}
+
+function win(){
+ let w=[
+ [0,1,2],[3,4,5],[6,7,8],
+ [0,3,6],[1,4,7],[2,5,8],
+ [0,4,8],[2,4,6]
+ ];
+ return w.some(x=>x
